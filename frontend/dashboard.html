@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="fname"></div>
+    <div id="lname"></div>
+    <div id="email"></div>
+    <script>
+      const params = new Proxy(new URLSearchParams(window.location.search), {
+        get: (searchParams, prop) => searchParams.get(prop),
+      });
+      //Get the value of key
+
+      // this variable store the email from URL
+      let value = params.ID;
+      if (value) {
+        //call the api to get user data.
+        fetch("http://localhost:3000/dataOfUser", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ID: ID,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              document.getElementById("fname").innerHTML = data.data.fname;
+              document.getElementById("lname").innerHTML = data.data.lname;
+              document.getElementById("email").innerHTML = data.data.email;
+            } else {
+              document.getElementById("error").innerHTML = `User not found`;
+            }
+          });
+      }
+    </script>
+  </body>
+</html>
